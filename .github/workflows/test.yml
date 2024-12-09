@@ -15,34 +15,50 @@ defaults:
     shell: bash
 
 jobs:
-  test:
-    name: Test
+  test-not-empty:
+    name: Test not-empty
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - value: foo
+            not-empty: true
+            expected: success
+          - value: foo
+            not-empty: false
+            expected: success
+          - value: ''
+            not-empty: true
+            expected: failure
+          - value: ''
+            not-empty: 'true'
+            expected: failure
+          - value: ''
+            not-empty: false
+            expected: success
+          - value: ''
+            not-empty: 'false'
+            expected: success
     steps:
       - name: Checkout
         uses: tmknom/checkout-action@v1
 
-      - name: Setup
-        run: |
-          set -x
-          echo "Setup"
-
       - name: Exercise
         id: exercise
         uses: ./
+        continue-on-error: true
+        with:
+          value: ${{ matrix.value }}
+          not-empty: ${{ matrix.not-empty }}
 
       - name: Verify
         env:
-          OUTCOME: ${{ steps.exercise.outcome }}
+          EXPECTED: ${{ matrix.expected }}
+          ACTUAL: ${{ steps.exercise.outcome }}
         run: |
           set -x
-          test "${OUTCOME}" = "success"
-
-      - name: Teardown
-        if: ${{ always() }}
-        run: |
-          set -x
-          echo "Teardown"
+          test "${ACTUAL}" = "${EXPECTED}"

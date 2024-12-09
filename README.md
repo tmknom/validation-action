@@ -1,26 +1,32 @@
-# template-composite-action
+# validation-action
 
-Template repository for Composite Action.
+Validate specified value in workflows.
 
 <!-- actdocs start -->
 
 ## Description
 
-Template repository for creating Composite Action with GitHub Actions.
+This action validates input values based on user-specified rules.
+It integrates seamlessly with Composite Actions, Reusable Workflows, and standard GitHub Workflows,
+making it versatile for input validation across various use cases.
 
 ## Usage
 
-Write usage for your Composite Action.
-
 ```yaml
   steps:
-    - name: Template
-      uses: tmknom/template-composite-action@v0
+    - name: Validation
+      uses: tmknom/validation-action@v0
+      with:
+        value: foo
+        not-empty: true
 ```
 
 ## Inputs
 
-N/A
+| Name | Description | Default | Required |
+| :--- | :---------- | :------ | :------: |
+| value | The value for validation. | n/a | yes |
+| not-empty | Whether to check if the value is not empty. | n/a | no |
 
 ## Outputs
 
@@ -48,4 +54,4 @@ See [GitHub Releases][releases].
 
 Apache 2 Licensed. See [LICENSE](LICENSE) for full details.
 
-[releases]: https://github.com/tmknom/template-composite-action/releases
+[releases]: https://github.com/tmknom/validation-action/releases
