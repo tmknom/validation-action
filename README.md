@@ -26,6 +26,7 @@ making it versatile for input validation across various use cases.
 | Name | Description | Default | Required |
 | :--- | :---------- | :------ | :------: |
 | value | The value for validation. | n/a | yes |
+| digit | Checks whether the input value contains only digits (0-9). | n/a | no |
 | not-empty | Checks whether the input value is not empty. | n/a | no |
 
 ## Outputs
