@@ -21,7 +21,7 @@ inputs:
     description: The value for validation.
   not-empty:
     required: false
-    description: Whether to check if the value is not empty.
+    description: Checks whether the input value is not empty.
 
 runs:
   using: composite
