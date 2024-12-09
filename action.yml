@@ -1,23 +1,62 @@
-name: Rename me
+name: Validation
 description: |
-  Template repository for creating Composite Action with GitHub Actions.
+  This action validates input values based on user-specified rules.
+  It integrates seamlessly with Composite Actions, Reusable Workflows, and standard GitHub Workflows,
+  making it versatile for input validation across various use cases.
 
   ## Usage
 
-  Write usage for your Composite Action.
-
   ```yaml
     steps:
-      - name: Template
-        uses: tmknom/template-composite-action@v0
+      - name: Validation
+        uses: tmknom/validation-action@v0
+        with:
+          value: foo
+          not-empty: true
   ```
+
+inputs:
+  value:
+    required: true
+    description: The value for validation.
+  not-empty:
+    required: false
+    description: Whether to check if the value is not empty.
 
 runs:
   using: composite
 
   steps:
-    - name: Run
-      shell: bash
+    - name: Install valid
+      env:
+        VERSION: v0.2.0
+        BASE_URL: https://github.com/tmknom/valid/releases/download
       run: |
+        echo "::group::Install valid"
         set -x
-        echo "Write steps"
+        url="${BASE_URL}/${VERSION}/valid_Linux_x86_64.tar.gz"
+        bin_path="${RUNNER_TEMP}/${GITHUB_ACTION}/bin"
+        mkdir -p "${bin_path}"
+
+        curl -sSL -o "${bin_path}/valid.tar.gz" "${url}"
+        tar -zxvf "${bin_path}/valid.tar.gz" -C "${bin_path}"
+        echo "${bin_path}" >> "${GITHUB_PATH}"
+        echo "::endgroup::"
+      shell: bash
+
+    - name: Run valid
+      env:
+        VALUE: ${{ inputs.value }}
+        NOT_EMPTY: ${{ inputs.not-empty }}
+      run: |
+        echo "::group::Run valid"
+        set -x
+        flags=(--value "${VALUE}")
+
+        if [[ "${NOT_EMPTY}" != "" && "${NOT_EMPTY}" != "false" ]]; then
+          flags+=(--not-empty)
+        fi
+
+        valid "${flags[@]}"
+        echo "::endgroup::"
+      shell: bash
