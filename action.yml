@@ -18,13 +18,13 @@ description: |
 inputs:
   value:
     required: true
-    description: The value for validation.
+    description: The value to validate.
   not-empty:
     required: false
-    description: Checks whether the input value is not empty.
+    description: Validates whether the input value is not empty.
   digit:
     required: false
-    description: Checks whether the input value contains only digits (0-9).
+    description: Validates whether the input value contains only digits (0-9).
 
 runs:
   using: composite
