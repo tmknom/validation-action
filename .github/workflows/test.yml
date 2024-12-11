@@ -32,14 +32,8 @@ jobs:
             not-empty: false
             expected: success
           - value: ''
-            not-empty: true
-            expected: failure
-          - value: ''
             not-empty: 'true'
             expected: failure
-          - value: ''
-            not-empty: false
-            expected: success
           - value: ''
             not-empty: 'false'
             expected: success
