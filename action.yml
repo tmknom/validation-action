@@ -55,6 +55,9 @@ inputs:
   enum:
     required: false
     description: Validates whether the input value matches any of the specified enumerations.
+  pattern:
+    required: false
+    description: Validates whether the input value matches the specified regular expression.
 
 runs:
   using: composite
@@ -90,6 +93,7 @@ runs:
         MIN_LENGTH: ${{ inputs.min-length }}
         MAX_LENGTH: ${{ inputs.max-length }}
         ENUM: ${{ inputs.enum }}
+        PATTERN: ${{ inputs.pattern }}
       run: |
         echo "::group::Run valid"
         set -x
@@ -133,6 +137,10 @@ runs:
 
         if [[ "${ENUM}" != "" ]]; then
           flags+=(--enum "${ENUM}")
+        fi
+
+        if [[ "${PATTERN}" != "" ]]; then
+          flags+=(--pattern "${PATTERN}")
         fi
 
         valid "${flags[@]}"
