@@ -40,6 +40,9 @@ inputs:
   ascii:
     required: false
     description: Validates whether the input value contains only ASCII characters.
+  printable-ascii:
+    required: false
+    description: Validates whether the input value contains only printable ASCII characters.
 
 runs:
   using: composite
@@ -70,6 +73,7 @@ runs:
         ALPHA: ${{ inputs.alpha }}
         ALPHANUMERIC: ${{ inputs.alphanumeric }}
         ASCII: ${{ inputs.ascii }}
+        PRINTABLE_ASCII: ${{ inputs.printable-ascii }}
       run: |
         echo "::group::Run valid"
         set -x
@@ -93,6 +97,10 @@ runs:
 
         if [[ "${ASCII}" != "" && "${ASCII}" != "false" ]]; then
           flags+=(--ascii)
+        fi
+
+        if [[ "${PRINTABLE_ASCII}" != "" && "${PRINTABLE_ASCII}" != "false" ]]; then
+          flags+=(--printable-ascii)
         fi
 
         valid "${flags[@]}"
