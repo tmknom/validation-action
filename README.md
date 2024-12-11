@@ -36,6 +36,7 @@ It ensures data consistency across various use cases.
 | alphanumeric | Validates whether the input value contains only English letters and digits (a-zA-Z0-9). | n/a | no |
 | ascii | Validates whether the input value contains only ASCII characters. | n/a | no |
 | digit | Validates whether the input value contains only digits (0-9). | n/a | no |
+| enum | Validates whether the input value matches any of the specified enumerations. | n/a | no |
 | exact-length | Validates whether the input value's length is exactly equal to the specified number. | n/a | no |
 | max-length | Validates whether the input value's length is less than or equal to the specified maximum. | n/a | no |
 | min-length | Validates whether the input value's length is greater than or equal to the specified minimum. | n/a | no |
