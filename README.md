@@ -1,6 +1,6 @@
 # validation-action
 
-Validate specified value in workflows.
+Validates whether input values meet specified rules.
 
 <!-- actdocs start -->
 
