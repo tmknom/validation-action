@@ -37,6 +37,7 @@ It ensures data consistency across various use cases.
 | ascii | Validates whether the input value contains only ASCII characters. | n/a | no |
 | digit | Validates whether the input value contains only digits (0-9). | n/a | no |
 | not-empty | Validates whether the input value is not empty. | n/a | no |
+| printable-ascii | Validates whether the input value contains only printable ASCII characters. | n/a | no |
 
 ## Outputs
 
