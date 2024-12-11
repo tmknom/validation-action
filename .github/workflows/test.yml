@@ -164,3 +164,39 @@ jobs:
         run: |
           set -x
           test "${ACTUAL}" = "${EXPECTED}"
+
+  test-ascii:
+    name: Test ascii
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - value: abcXYZ123<>
+            ascii: true
+            expected: success
+          - value: abcABC123<>あ
+            ascii: true
+            expected: failure
+    steps:
+      - name: Checkout
+        uses: tmknom/checkout-action@v1
+
+      - name: Exercise
+        id: exercise
+        uses: ./
+        continue-on-error: true
+        with:
+          value: ${{ matrix.value }}
+          ascii: ${{ matrix.ascii }}
+
+      - name: Verify
+        env:
+          EXPECTED: ${{ matrix.expected }}
+          ACTUAL: ${{ steps.exercise.outcome }}
+        run: |
+          set -x
+          test "${ACTUAL}" = "${EXPECTED}"
