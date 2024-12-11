@@ -49,6 +49,9 @@ inputs:
   min-length:
     required: false
     description: Validates whether the input value's length is greater than or equal to the specified minimum.
+  max-length:
+    required: false
+    description: Validates whether the input value's length is less than or equal to the specified maximum.
 
 runs:
   using: composite
@@ -82,6 +85,7 @@ runs:
         PRINTABLE_ASCII: ${{ inputs.printable-ascii }}
         EXACT_LENGTH: ${{ inputs.exact-length }}
         MIN_LENGTH: ${{ inputs.min-length }}
+        MAX_LENGTH: ${{ inputs.max-length }}
       run: |
         echo "::group::Run valid"
         set -x
@@ -117,6 +121,10 @@ runs:
 
         if [[ "${MIN_LENGTH}" != "" ]]; then
           flags+=(--min-length "${MIN_LENGTH}")
+        fi
+
+        if [[ "${MAX_LENGTH}" != "" ]]; then
+          flags+=(--max-length "${MAX_LENGTH}")
         fi
 
         valid "${flags[@]}"
