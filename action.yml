@@ -38,7 +38,7 @@ runs:
   steps:
     - name: Install valid
       env:
-        VERSION: v0.2.0
+        VERSION: v0.2.1
         BASE_URL: https://github.com/tmknom/valid/releases/download
       run: |
         echo "::group::Install valid"
