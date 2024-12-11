@@ -43,6 +43,9 @@ inputs:
   printable-ascii:
     required: false
     description: Validates whether the input value contains only printable ASCII characters.
+  exact-length:
+    required: false
+    description: Validates whether the input value's length is exactly equal to the specified number.
 
 runs:
   using: composite
@@ -74,6 +77,7 @@ runs:
         ALPHANUMERIC: ${{ inputs.alphanumeric }}
         ASCII: ${{ inputs.ascii }}
         PRINTABLE_ASCII: ${{ inputs.printable-ascii }}
+        EXACT_LENGTH: ${{ inputs.exact-length }}
       run: |
         echo "::group::Run valid"
         set -x
@@ -101,6 +105,10 @@ runs:
 
         if [[ "${PRINTABLE_ASCII}" != "" && "${PRINTABLE_ASCII}" != "false" ]]; then
           flags+=(--printable-ascii)
+        fi
+
+        if [[ "${EXACT_LENGTH}" != "" ]]; then
+          flags+=(--exact-length "${EXACT_LENGTH}")
         fi
 
         valid "${flags[@]}"

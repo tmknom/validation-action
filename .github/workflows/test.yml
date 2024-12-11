@@ -236,3 +236,42 @@ jobs:
         run: |
           set -x
           test "${ACTUAL}" = "${EXPECTED}"
+
+  test-exact-length:
+    name: Test exact-length
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - value: abc
+            exact-length: 3
+            expected: success
+          - value: ab
+            exact-length: 3
+            expected: failure
+          - value: abcd
+            exact-length: 3
+            expected: failure
+    steps:
+      - name: Checkout
+        uses: tmknom/checkout-action@v1
+
+      - name: Exercise
+        id: exercise
+        uses: ./
+        continue-on-error: true
+        with:
+          value: ${{ matrix.value }}
+          exact-length: ${{ matrix.exact-length }}
+
+      - name: Verify
+        env:
+          EXPECTED: ${{ matrix.expected }}
+          ACTUAL: ${{ steps.exercise.outcome }}
+        run: |
+          set -x
+          test "${ACTUAL}" = "${EXPECTED}"
