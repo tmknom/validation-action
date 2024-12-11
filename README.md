@@ -51,7 +51,7 @@ N/A
 
 ## Related projects
 
-N/A
+- [valid](https://github.com/tmknom/valid): The CLI tool validates whether input values meet specified rules.
 
 ## Release notes
 
