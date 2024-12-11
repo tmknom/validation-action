@@ -37,6 +37,9 @@ inputs:
   alphanumeric:
     required: false
     description: Validates whether the input value contains only English letters and digits (a-zA-Z0-9).
+  ascii:
+    required: false
+    description: Validates whether the input value contains only ASCII characters.
 
 runs:
   using: composite
@@ -66,6 +69,7 @@ runs:
         DIGIT: ${{ inputs.digit }}
         ALPHA: ${{ inputs.alpha }}
         ALPHANUMERIC: ${{ inputs.alphanumeric }}
+        ASCII: ${{ inputs.ascii }}
       run: |
         echo "::group::Run valid"
         set -x
@@ -85,6 +89,10 @@ runs:
 
         if [[ "${ALPHANUMERIC}" != "" && "${ALPHANUMERIC}" != "false" ]]; then
           flags+=(--alphanumeric)
+        fi
+
+        if [[ "${ASCII}" != "" && "${ASCII}" != "false" ]]; then
+          flags+=(--ascii)
         fi
 
         valid "${flags[@]}"

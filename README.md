@@ -34,6 +34,7 @@ It ensures data consistency across various use cases.
 | value | The value to validate. | n/a | yes |
 | alpha | Validates whether the input value contains only English letters (a-zA-Z). | n/a | no |
 | alphanumeric | Validates whether the input value contains only English letters and digits (a-zA-Z0-9). | n/a | no |
+| ascii | Validates whether the input value contains only ASCII characters. | n/a | no |
 | digit | Validates whether the input value contains only digits (0-9). | n/a | no |
 | not-empty | Validates whether the input value is not empty. | n/a | no |
 
