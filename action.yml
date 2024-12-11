@@ -31,6 +31,9 @@ inputs:
   digit:
     required: false
     description: Validates whether the input value contains only digits (0-9).
+  alpha:
+    required: false
+    description: Validates whether the input value contains only English letters (a-zA-Z).
 
 runs:
   using: composite
@@ -58,6 +61,7 @@ runs:
         VALUE: ${{ inputs.value }}
         NOT_EMPTY: ${{ inputs.not-empty }}
         DIGIT: ${{ inputs.digit }}
+        ALPHA: ${{ inputs.alpha }}
       run: |
         echo "::group::Run valid"
         set -x
@@ -69,6 +73,10 @@ runs:
 
         if [[ "${DIGIT}" != "" && "${DIGIT}" != "false" ]]; then
           flags+=(--digit)
+        fi
+
+        if [[ "${ALPHA}" != "" && "${ALPHA}" != "false" ]]; then
+          flags+=(--alpha)
         fi
 
         valid "${flags[@]}"
