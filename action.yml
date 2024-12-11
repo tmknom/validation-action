@@ -46,6 +46,9 @@ inputs:
   exact-length:
     required: false
     description: Validates whether the input value's length is exactly equal to the specified number.
+  min-length:
+    required: false
+    description: Validates whether the input value's length is greater than or equal to the specified minimum.
 
 runs:
   using: composite
@@ -78,6 +81,7 @@ runs:
         ASCII: ${{ inputs.ascii }}
         PRINTABLE_ASCII: ${{ inputs.printable-ascii }}
         EXACT_LENGTH: ${{ inputs.exact-length }}
+        MIN_LENGTH: ${{ inputs.min-length }}
       run: |
         echo "::group::Run valid"
         set -x
@@ -109,6 +113,10 @@ runs:
 
         if [[ "${EXACT_LENGTH}" != "" ]]; then
           flags+=(--exact-length "${EXACT_LENGTH}")
+        fi
+
+        if [[ "${MIN_LENGTH}" != "" ]]; then
+          flags+=(--min-length "${MIN_LENGTH}")
         fi
 
         valid "${flags[@]}"
