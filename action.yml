@@ -52,6 +52,9 @@ inputs:
   max-length:
     required: false
     description: Validates whether the input value's length is less than or equal to the specified maximum.
+  enum:
+    required: false
+    description: Validates whether the input value matches any of the specified enumerations.
 
 runs:
   using: composite
@@ -86,6 +89,7 @@ runs:
         EXACT_LENGTH: ${{ inputs.exact-length }}
         MIN_LENGTH: ${{ inputs.min-length }}
         MAX_LENGTH: ${{ inputs.max-length }}
+        ENUM: ${{ inputs.enum }}
       run: |
         echo "::group::Run valid"
         set -x
@@ -125,6 +129,10 @@ runs:
 
         if [[ "${MAX_LENGTH}" != "" ]]; then
           flags+=(--max-length "${MAX_LENGTH}")
+        fi
+
+        if [[ "${ENUM}" != "" ]]; then
+          flags+=(--enum "${ENUM}")
         fi
 
         valid "${flags[@]}"
