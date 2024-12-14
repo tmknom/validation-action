@@ -67,6 +67,9 @@ inputs:
   enum:
     required: false
     description: Validates whether the input value matches any of the specified enumerations.
+  timestamp:
+    required: false
+    description: Validates whether the input value matches a timestamp format [rfc3339, datetime, date, time].
   pattern:
     required: false
     description: Validates whether the input value matches the specified regular expression.
@@ -109,6 +112,7 @@ runs:
         MIN: ${{ inputs.min }}
         MAX: ${{ inputs.max }}
         ENUM: ${{ inputs.enum }}
+        TIMESTAMP: ${{ inputs.timestamp }}
         PATTERN: ${{ inputs.pattern }}
       run: |
         echo "::group::Run valid"
@@ -169,6 +173,10 @@ runs:
 
         if [[ "${ENUM}" != "" ]]; then
           flags+=(--enum "${ENUM}")
+        fi
+
+        if [[ "${TIMESTAMP}" != "" ]]; then
+          flags+=(--timestamp "${TIMESTAMP}")
         fi
 
         if [[ "${PATTERN}" != "" ]]; then

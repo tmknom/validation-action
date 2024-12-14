@@ -47,6 +47,7 @@ It ensures data consistency across various use cases.
 | not-empty | Validates whether the input value is not empty. | n/a | no |
 | pattern | Validates whether the input value matches the specified regular expression. | n/a | no |
 | printable-ascii | Validates whether the input value contains only printable ASCII characters. | n/a | no |
+| timestamp | Validates whether the input value matches a timestamp format [rfc3339, datetime, date, time]. | n/a | no |
 
 ## Outputs
 
