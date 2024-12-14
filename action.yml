@@ -61,6 +61,9 @@ inputs:
   min:
     required: false
     description: Validates whether the input value is greater than or equal to the specified minimum.
+  max:
+    required: false
+    description: Validates whether the input value is less than or equal to the specified maximum.
   enum:
     required: false
     description: Validates whether the input value matches any of the specified enumerations.
@@ -104,6 +107,7 @@ runs:
         MIN_LENGTH: ${{ inputs.min-length }}
         MAX_LENGTH: ${{ inputs.max-length }}
         MIN: ${{ inputs.min }}
+        MAX: ${{ inputs.max }}
         ENUM: ${{ inputs.enum }}
         PATTERN: ${{ inputs.pattern }}
       run: |
@@ -157,6 +161,10 @@ runs:
 
         if [[ "${MIN}" != "" ]]; then
           flags+=(--min "${MIN}")
+        fi
+
+        if [[ "${MAX}" != "" ]]; then
+          flags+=(--max "${MAX}")
         fi
 
         if [[ "${ENUM}" != "" ]]; then
