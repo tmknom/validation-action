@@ -31,11 +31,11 @@ jobs:
           - value: foo
             not-empty: false
             expected: success
-          - value: ''
-            not-empty: 'true'
+          - value: ""
+            not-empty: "true"
             expected: failure
-          - value: ''
-            not-empty: 'false'
+          - value: ""
+            not-empty: "false"
             expected: success
     steps:
       - name: Checkout
@@ -403,10 +403,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - value: 'valid+=,.@-'
+          - value: "valid+=,.@-"
             pattern: '^[\w+=,.@-]+$'
             expected: success
-          - value: 'valid+=,.@-<>'
+          - value: "valid+=,.@-<>"
             pattern: '^[\w+=,.@-]+$'
             expected: failure
     steps:
