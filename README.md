@@ -41,6 +41,7 @@ It ensures data consistency across various use cases.
 | float | Validates whether the input value is a floating-point number. | n/a | no |
 | int | Validates whether the input value is an integer. | n/a | no |
 | max-length | Validates whether the input value's length is less than or equal to the specified maximum. | n/a | no |
+| min | Validates whether the input value is greater than or equal to the specified minimum. | n/a | no |
 | min-length | Validates whether the input value's length is greater than or equal to the specified minimum. | n/a | no |
 | not-empty | Validates whether the input value is not empty. | n/a | no |
 | pattern | Validates whether the input value matches the specified regular expression. | n/a | no |
