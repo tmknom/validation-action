@@ -46,6 +46,9 @@ inputs:
   int:
     required: false
     description: Validates whether the input value is an integer.
+  float:
+    required: false
+    description: Validates whether the input value is a floating-point number.
   exact-length:
     required: false
     description: Validates whether the input value's length is exactly equal to the specified number.
@@ -93,6 +96,7 @@ runs:
         ASCII: ${{ inputs.ascii }}
         PRINTABLE_ASCII: ${{ inputs.printable-ascii }}
         INT: ${{ inputs.int }}
+        FLOAT: ${{ inputs.float }}
         EXACT_LENGTH: ${{ inputs.exact-length }}
         MIN_LENGTH: ${{ inputs.min-length }}
         MAX_LENGTH: ${{ inputs.max-length }}
@@ -129,6 +133,10 @@ runs:
 
         if [[ "${INT}" != "" && "${INT}" != "false" ]]; then
           flags+=(--int)
+        fi
+
+        if [[ "${FLOAT}" != "" && "${FLOAT}" != "false" ]]; then
+          flags+=(--float)
         fi
 
         if [[ "${EXACT_LENGTH}" != "" ]]; then
