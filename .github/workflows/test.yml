@@ -549,6 +549,63 @@ jobs:
           set -x
           test "${ACTUAL}" = "${EXPECTED}"
 
+  test-timestamp:
+    name: Test timestamp
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - value: "2024-08-09T12:34:56+07:00"
+            timestamp: rfc3339
+            expected: success
+          - value: "2024-08-09T12:34:56Z"
+            timestamp: rfc3339
+            expected: success
+          - value: "2024-08-09T12:34:56"
+            timestamp: rfc3339
+            expected: failure
+          - value: "2024-08-09 12:34:56"
+            timestamp: datetime
+            expected: success
+          - value: "2024-08-09T12:34:56Z"
+            timestamp: datetime
+            expected: failure
+          - value: "2024-08-09"
+            timestamp: date
+            expected: success
+          - value: "12:34:56"
+            timestamp: date
+            expected: failure
+          - value: "12:34:56"
+            timestamp: time
+            expected: success
+          - value: "2024-08-09"
+            timestamp: time
+            expected: failure
+    steps:
+      - name: Checkout
+        uses: tmknom/checkout-action@v1
+
+      - name: Exercise
+        id: exercise
+        uses: ./
+        continue-on-error: true
+        with:
+          value: ${{ matrix.value }}
+          timestamp: ${{ matrix.timestamp }}
+
+      - name: Verify
+        env:
+          EXPECTED: ${{ matrix.expected }}
+          ACTUAL: ${{ steps.exercise.outcome }}
+        run: |
+          set -x
+          test "${ACTUAL}" = "${EXPECTED}"
+
   test-pattern:
     name: Test pattern
     runs-on: ubuntu-latest
