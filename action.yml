@@ -55,6 +55,9 @@ inputs:
   email:
     required: false
     description: Validates whether the input value is a valid email address.
+  semver:
+    required: false
+    description: Validates whether the input value is a valid semantic version.
   exact-length:
     required: false
     description: Validates whether the input value's length is exactly equal to the specified number.
@@ -114,6 +117,7 @@ runs:
         FLOAT: ${{ inputs.float }}
         URL: ${{ inputs.url }}
         EMAIL: ${{ inputs.email }}
+        SEMVER: ${{ inputs.semver }}
         EXACT_LENGTH: ${{ inputs.exact-length }}
         MIN_LENGTH: ${{ inputs.min-length }}
         MAX_LENGTH: ${{ inputs.max-length }}
@@ -165,6 +169,10 @@ runs:
 
         if [[ "${EMAIL}" != "" && "${EMAIL}" != "false" ]]; then
           flags+=(--email)
+        fi
+
+        if [[ "${SEMVER}" != "" && "${SEMVER}" != "false" ]]; then
+          flags+=(--semver)
         fi
 
         if [[ "${EXACT_LENGTH}" != "" ]]; then
