@@ -432,6 +432,45 @@ jobs:
           set -x
           test "${ACTUAL}" = "${EXPECTED}"
 
+  test-min:
+    name: Test min
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - value: 5
+            min: 5
+            expected: success
+          - value: 5
+            min: 4
+            expected: success
+          - value: 5
+            min: 6
+            expected: failure
+    steps:
+      - name: Checkout
+        uses: tmknom/checkout-action@v1
+
+      - name: Exercise
+        id: exercise
+        uses: ./
+        continue-on-error: true
+        with:
+          value: ${{ matrix.value }}
+          min: ${{ matrix.min }}
+
+      - name: Verify
+        env:
+          EXPECTED: ${{ matrix.expected }}
+          ACTUAL: ${{ steps.exercise.outcome }}
+        run: |
+          set -x
+          test "${ACTUAL}" = "${EXPECTED}"
+
   test-enum:
     name: Test enum
     runs-on: ubuntu-latest
