@@ -48,6 +48,7 @@ It ensures data consistency across various use cases.
 | pattern | Validates whether the input value matches the specified regular expression. | n/a | no |
 | printable-ascii | Validates whether the input value contains only printable ASCII characters. | n/a | no |
 | timestamp | Validates whether the input value matches a timestamp format [rfc3339, datetime, date, time]. | n/a | no |
+| url | Validates whether the input value is a valid URL. | n/a | no |
 
 ## Outputs
 
