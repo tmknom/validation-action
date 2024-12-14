@@ -315,6 +315,45 @@ jobs:
           set -x
           test "${ACTUAL}" = "${EXPECTED}"
 
+  test-url:
+    name: Test url
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - value: https://example.com
+            url: true
+            expected: success
+          - value: https://localhost:8080/test.html
+            url: true
+            expected: success
+          - value: example.com
+            url: true
+            expected: failure
+    steps:
+      - name: Checkout
+        uses: tmknom/checkout-action@v1
+
+      - name: Exercise
+        id: exercise
+        uses: ./
+        continue-on-error: true
+        with:
+          value: ${{ matrix.value }}
+          url: ${{ matrix.url }}
+
+      - name: Verify
+        env:
+          EXPECTED: ${{ matrix.expected }}
+          ACTUAL: ${{ steps.exercise.outcome }}
+        run: |
+          set -x
+          test "${ACTUAL}" = "${EXPECTED}"
+
   test-exact-length:
     name: Test exact-length
     runs-on: ubuntu-latest
