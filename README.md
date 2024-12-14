@@ -35,6 +35,7 @@ It ensures data consistency across various use cases.
 | alpha | Validates whether the input value contains only English letters (a-zA-Z). | n/a | no |
 | alphanumeric | Validates whether the input value contains only English letters and digits (a-zA-Z0-9). | n/a | no |
 | ascii | Validates whether the input value contains only ASCII characters. | n/a | no |
+| base64 | Validates whether the input value is valid Base64. | n/a | no |
 | digit | Validates whether the input value contains only digits (0-9). | n/a | no |
 | email | Validates whether the input value is a valid email address. | n/a | no |
 | enum | Validates whether the input value matches any of the specified enumerations. | n/a | no |

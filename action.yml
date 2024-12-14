@@ -58,6 +58,9 @@ inputs:
   semver:
     required: false
     description: Validates whether the input value is a valid semantic version.
+  base64:
+    required: false
+    description: Validates whether the input value is valid Base64.
   exact-length:
     required: false
     description: Validates whether the input value's length is exactly equal to the specified number.
@@ -118,6 +121,7 @@ runs:
         URL: ${{ inputs.url }}
         EMAIL: ${{ inputs.email }}
         SEMVER: ${{ inputs.semver }}
+        BASE64: ${{ inputs.base64 }}
         EXACT_LENGTH: ${{ inputs.exact-length }}
         MIN_LENGTH: ${{ inputs.min-length }}
         MAX_LENGTH: ${{ inputs.max-length }}
@@ -173,6 +177,10 @@ runs:
 
         if [[ "${SEMVER}" != "" && "${SEMVER}" != "false" ]]; then
           flags+=(--semver)
+        fi
+
+        if [[ "${BASE64}" != "" && "${BASE64}" != "false" ]]; then
+          flags+=(--base64)
         fi
 
         if [[ "${EXACT_LENGTH}" != "" ]]; then
