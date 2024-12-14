@@ -43,6 +43,9 @@ inputs:
   printable-ascii:
     required: false
     description: Validates whether the input value contains only printable ASCII characters.
+  int:
+    required: false
+    description: Validates whether the input value is an integer.
   exact-length:
     required: false
     description: Validates whether the input value's length is exactly equal to the specified number.
@@ -89,6 +92,7 @@ runs:
         ALPHANUMERIC: ${{ inputs.alphanumeric }}
         ASCII: ${{ inputs.ascii }}
         PRINTABLE_ASCII: ${{ inputs.printable-ascii }}
+        INT: ${{ inputs.int }}
         EXACT_LENGTH: ${{ inputs.exact-length }}
         MIN_LENGTH: ${{ inputs.min-length }}
         MAX_LENGTH: ${{ inputs.max-length }}
@@ -121,6 +125,10 @@ runs:
 
         if [[ "${PRINTABLE_ASCII}" != "" && "${PRINTABLE_ASCII}" != "false" ]]; then
           flags+=(--printable-ascii)
+        fi
+
+        if [[ "${INT}" != "" && "${INT}" != "false" ]]; then
+          flags+=(--int)
         fi
 
         if [[ "${EXACT_LENGTH}" != "" ]]; then
