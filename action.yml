@@ -61,6 +61,9 @@ inputs:
   base64:
     required: false
     description: Validates whether the input value is valid Base64.
+  json:
+    required: false
+    description: Validates whether the input value is valid JSON.
   exact-length:
     required: false
     description: Validates whether the input value's length is exactly equal to the specified number.
@@ -122,6 +125,7 @@ runs:
         EMAIL: ${{ inputs.email }}
         SEMVER: ${{ inputs.semver }}
         BASE64: ${{ inputs.base64 }}
+        JSON: ${{ inputs.json }}
         EXACT_LENGTH: ${{ inputs.exact-length }}
         MIN_LENGTH: ${{ inputs.min-length }}
         MAX_LENGTH: ${{ inputs.max-length }}
@@ -181,6 +185,10 @@ runs:
 
         if [[ "${BASE64}" != "" && "${BASE64}" != "false" ]]; then
           flags+=(--base64)
+        fi
+
+        if [[ "${JSON}" != "" && "${JSON}" != "false" ]]; then
+          flags+=(--json)
         fi
 
         if [[ "${EXACT_LENGTH}" != "" ]]; then
