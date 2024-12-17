@@ -76,8 +76,4 @@ N/A
 
 See [GitHub Releases][releases].
 
-## License
-
-Apache 2 Licensed. See [LICENSE](LICENSE) for full details.
-
 [releases]: https://github.com/tmknom/validation-action/releases
