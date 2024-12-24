@@ -66,7 +66,22 @@ N/A
 
 ## FAQ
 
-N/A
+### What Happens When a Validation Error Occurs?
+
+The workflow stops with an error because the action returns a non-zero exit code when it detects a validation error.
+
+### Can I Continue Processing Despite Validation Errors?
+
+Yes, you can use the `continue-on-error` key.
+For example, you can configure the action like this to keep processing even if a validation error happens.
+
+```yaml
+- uses: tmknom/validation-action@v0
+  with:
+    value: foo
+    not-empty: true
+  continue-on-error: true
+```
 
 ## Related projects
 
