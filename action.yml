@@ -1,4 +1,4 @@
-name: Validation
+name: Validation Action
 description: |
   This action validates the input values against formats, patterns, ranges, character sets, and other user-defined rules.
   It supports a variety of validations, including:
