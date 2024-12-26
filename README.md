@@ -6,16 +6,7 @@ Validates whether input values meet specified rules.
 
 ## Description
 
-This action validates the input values against formats, patterns, ranges, character sets, and other user-defined rules.
-It supports a variety of validations, including:
-
-- **Character validation**: Checks if input uses specific character sets like ASCII, digits, or alphanumeric characters
-- **Range validation**: Verifies that values fall within specified numerical or date ranges
-- **Pattern matching**: Validates formats such as email addresses, URLs, or semantic versions
-
-This action is ideal for Composite Actions, Reusable Workflows, and standard workflows in GitHub Actions.
-It ensures data consistency across various use cases.
-
+Validates the input values against formats, patterns, ranges, character sets, and other user-defined rules.
 
 ## Inputs
 
