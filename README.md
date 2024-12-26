@@ -16,16 +16,6 @@ It supports a variety of validations, including:
 This action is ideal for Composite Actions, Reusable Workflows, and standard workflows in GitHub Actions.
 It ensures data consistency across various use cases.
 
-## Usage
-
-```yaml
-  steps:
-    - name: Validation
-      uses: tmknom/validation-action@v0
-      with:
-        value: foo
-        not-empty: true
-```
 
 ## Inputs
 
@@ -63,6 +53,17 @@ N/A
 ## Permissions
 
 N/A
+
+## Usage
+
+```yaml
+  steps:
+    - name: Validation
+      uses: tmknom/validation-action@v0
+      with:
+        value: foo
+        not-empty: true
+```
 
 ## FAQ
 
