@@ -74,19 +74,95 @@ runs:
   using: composite
 
   steps:
+    - name: Create working directory
+      id: work
+      run: |
+        echo "::group::Create working directory"
+        set -x
+        repo="$(cut -d / -f 7 <<<"${GITHUB_ACTION_PATH/./${GITHUB_REPOSITORY_ID}}")"
+        owner="$(cut -d / -f 6 <<<"${GITHUB_ACTION_PATH}")"
+        sha256="$(sha256sum "${GITHUB_ACTION_PATH}/action.yml" | cut -d ' ' -f 1)"
+
+        workdir="${RUNNER_TEMP}/__${owner}-${repo}-${sha256}"
+        echo "dir=${workdir}" >> "${GITHUB_OUTPUT}"
+        mkdir -p "${workdir}"
+        echo "::endgroup::"
+      shell: bash
+
+    - name: Check Cosign is installed
+      id: installed
+      run: |
+        echo "::group::Check Cosign is installed"
+        set -x
+        installed="false"
+        if [ "$(which cosign)" ]; then
+          installed="true"
+        fi;
+        echo "cosign=${installed}" >> "${GITHUB_OUTPUT}"
+        echo "::endgroup::"
+      shell: bash
+
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da # v3.7.0
+      if: ${{ steps.installed.outputs.cosign == 'false' }}
+
     - name: Install valid
+      working-directory: ${{ steps.work.outputs.dir }}
       env:
+        EXECUTABLE: valid
         VERSION: '0.2.3'
-        BASE_URL: https://github.com/tmknom/valid/releases/download
+        COMMIT_DIGEST: 7ebf8665987ef63feef9732e478edced55941f6f
+        GITHUB_TOKEN: ${{ github.token }}
       run: |
         echo "::group::Install valid"
         set -x
-        bin_path="${RUNNER_TEMP}/${GITHUB_ACTION}/bin"
-        mkdir -p "${bin_path}"
-        echo "${bin_path}" >> "${GITHUB_PATH}"
+        repository="tmknom/${EXECUTABLE}"
+        executable_file="${EXECUTABLE}_${VERSION}_linux_amd64"
+        checksum_file="${EXECUTABLE}_${VERSION}_checksums.txt"
+        oidc_issuer="https://token.actions.githubusercontent.com"
+        build_signer_uri="https://github.com/tmknom/release-workflows/.github/workflows/go.yml"
+        build_signer_digest="9a415d93dc423de8e4ff66562ede2d8514eb69d3"
+        build_signer_identity="${build_signer_uri}@${build_signer_digest}"
 
-        curl -sSL -o "${bin_path}/valid" "${BASE_URL}/v${VERSION}/valid_${VERSION}_linux_amd64"
-        chmod +x "${bin_path}/valid"
+        # Download asset files
+        base_url="https://github.com/${repository}/releases/download/v${VERSION}"
+        curl --silent --show-error --fail --location --remote-name "${base_url}/${executable_file}"
+        curl --silent --show-error --fail --location --remote-name "${base_url}/${executable_file}.sig"
+        curl --silent --show-error --fail --location --remote-name "${base_url}/${executable_file}.pem"
+        curl --silent --show-error --fail --location --remote-name "${base_url}/${checksum_file}"
+        curl --silent --show-error --fail --location --remote-name "${base_url}/${checksum_file}.sig"
+        curl --silent --show-error --fail --location --remote-name "${base_url}/${checksum_file}.pem"
+
+        # Verify checksum file
+        cosign verify-blob \
+          --signature "${checksum_file}.sig" \
+          --certificate "${checksum_file}.pem" \
+          --certificate-oidc-issuer "${oidc_issuer}" \
+          --certificate-identity "${build_signer_identity}" \
+          --certificate-github-workflow-repository "${repository}" \
+          --certificate-github-workflow-sha "${COMMIT_DIGEST}" \
+          "${checksum_file}"
+        sha256sum --ignore-missing -c "${checksum_file}"
+
+        # Verify executable file
+        cosign verify-blob \
+          --signature "${executable_file}.sig" \
+          --certificate "${executable_file}.pem" \
+          --certificate-oidc-issuer "${oidc_issuer}" \
+          --certificate-identity "${build_signer_identity}" \
+          --certificate-github-workflow-repository "${repository}" \
+          --certificate-github-workflow-sha "${COMMIT_DIGEST}" \
+          "${executable_file}"
+
+        # Verify GitHub Artifact Attestations
+        gh attestation verify "${executable_file}" \
+          --deny-self-hosted-runners \
+          --cert-oidc-issuer "${oidc_issuer}" \
+          --cert-identity "${build_signer_identity}" \
+          --repo "${repository}"
+
+        chmod +x "${executable_file}"
+        mv "${executable_file}" "/usr/local/bin/${EXECUTABLE}"
         echo "::endgroup::"
       shell: bash
 
