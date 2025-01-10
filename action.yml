@@ -76,18 +76,17 @@ runs:
   steps:
     - name: Install valid
       env:
-        VERSION: v0.2.1
+        VERSION: '0.2.3'
         BASE_URL: https://github.com/tmknom/valid/releases/download
       run: |
         echo "::group::Install valid"
         set -x
-        url="${BASE_URL}/${VERSION}/valid_Linux_x86_64.tar.gz"
         bin_path="${RUNNER_TEMP}/${GITHUB_ACTION}/bin"
         mkdir -p "${bin_path}"
-
-        curl -sSL -o "${bin_path}/valid.tar.gz" "${url}"
-        tar -zxvf "${bin_path}/valid.tar.gz" -C "${bin_path}"
         echo "${bin_path}" >> "${GITHUB_PATH}"
+
+        curl -sSL -o "${bin_path}/valid" "${BASE_URL}/v${VERSION}/valid_${VERSION}_linux_amd64"
+        chmod +x "${bin_path}/valid"
         echo "::endgroup::"
       shell: bash
 
