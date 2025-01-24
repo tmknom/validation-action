@@ -1,7 +1,7 @@
 name: Merge
 on:
   pull_request:
-    paths: ["action.yml", ".github/workflows/*.yml"]
+    paths: [".github/workflows/*.yml"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
