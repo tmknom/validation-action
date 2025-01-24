@@ -74,21 +74,6 @@ runs:
   using: composite
 
   steps:
-    - name: Create working directory
-      id: work
-      run: |
-        echo "::group::Create working directory"
-        set -x
-        repo="$(cut -d / -f 7 <<<"${GITHUB_ACTION_PATH/./${GITHUB_REPOSITORY_ID}}")"
-        owner="$(cut -d / -f 6 <<<"${GITHUB_ACTION_PATH}")"
-        sha256="$(sha256sum "${GITHUB_ACTION_PATH}/action.yml" | cut -d ' ' -f 1)"
-
-        workdir="${RUNNER_TEMP}/__${owner}-${repo}-${sha256}"
-        echo "dir=${workdir}" >> "${GITHUB_OUTPUT}"
-        mkdir -p "${workdir}"
-        echo "::endgroup::"
-      shell: bash
-
     - name: Check Cosign is installed
       id: installed
       run: |
@@ -106,68 +91,44 @@ runs:
       uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da # v3.7.0
       if: ${{ steps.installed.outputs.cosign == 'false' }}
 
-    - name: Install valid
-      working-directory: ${{ steps.work.outputs.dir }}
+    - name: Pull and verify image
+      id: image
       env:
-        EXECUTABLE: valid
-        VERSION: '0.2.3'
-        COMMIT_DIGEST: 7ebf8665987ef63feef9732e478edced55941f6f
+        IMAGE_REPOSITORY: tmknom/valid
+        IMAGE_DIGEST: sha256:f95a2bb90c689814157939b50644dbd82696a9906da96ec8a6f210d3d109e064 # v0.2.3
+        IMAGE_SOURCE_DIGEST: 7ebf8665987ef63feef9732e478edced55941f6f
+        IMAGE_SIGNER_DIGEST: 9a415d93dc423de8e4ff66562ede2d8514eb69d3
+        IMAGE_SIGNER_WORKFLOW: https://github.com/tmknom/release-workflows/.github/workflows/go.yml
         GITHUB_TOKEN: ${{ github.token }}
       run: |
-        echo "::group::Install valid"
+        echo "::group::Pull and verify image"
         set -x
-        repository="tmknom/${EXECUTABLE}"
-        executable_file="${EXECUTABLE}_${VERSION}_linux_amd64"
-        checksum_file="${EXECUTABLE}_${VERSION}_checksums.txt"
-        oidc_issuer="https://token.actions.githubusercontent.com"
-        build_signer_uri="https://github.com/tmknom/release-workflows/.github/workflows/go.yml"
-        build_signer_digest="9a415d93dc423de8e4ff66562ede2d8514eb69d3"
-        build_signer_identity="${build_signer_uri}@${build_signer_digest}"
+        image="ghcr.io/${IMAGE_REPOSITORY}@${IMAGE_DIGEST}"
+        echo "repo-digest=${image}" >> "${GITHUB_OUTPUT}"
+        docker pull "${image}"
 
-        # Download asset files
-        base_url="https://github.com/${repository}/releases/download/v${VERSION}"
-        curl --silent --show-error --fail --location --remote-name "${base_url}/${executable_file}"
-        curl --silent --show-error --fail --location --remote-name "${base_url}/${executable_file}.sig"
-        curl --silent --show-error --fail --location --remote-name "${base_url}/${executable_file}.pem"
-        curl --silent --show-error --fail --location --remote-name "${base_url}/${checksum_file}"
-        curl --silent --show-error --fail --location --remote-name "${base_url}/${checksum_file}.sig"
-        curl --silent --show-error --fail --location --remote-name "${base_url}/${checksum_file}.pem"
+        cosign verify \
+          --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+          --certificate-identity "${IMAGE_SIGNER_WORKFLOW}@${IMAGE_SIGNER_DIGEST}" \
+          --certificate-github-workflow-repository "${IMAGE_REPOSITORY}" \
+          --certificate-github-workflow-sha "${IMAGE_SOURCE_DIGEST}" \
+          "${image}" 2>/dev/null
 
-        # Verify checksum file
-        cosign verify-blob \
-          --signature "${checksum_file}.sig" \
-          --certificate "${checksum_file}.pem" \
-          --certificate-oidc-issuer "${oidc_issuer}" \
-          --certificate-identity "${build_signer_identity}" \
-          --certificate-github-workflow-repository "${repository}" \
-          --certificate-github-workflow-sha "${COMMIT_DIGEST}" \
-          "${checksum_file}"
-        sha256sum --ignore-missing -c "${checksum_file}"
-
-        # Verify executable file
-        cosign verify-blob \
-          --signature "${executable_file}.sig" \
-          --certificate "${executable_file}.pem" \
-          --certificate-oidc-issuer "${oidc_issuer}" \
-          --certificate-identity "${build_signer_identity}" \
-          --certificate-github-workflow-repository "${repository}" \
-          --certificate-github-workflow-sha "${COMMIT_DIGEST}" \
-          "${executable_file}"
-
-        # Verify GitHub Artifact Attestations
-        gh attestation verify "${executable_file}" \
+        gh attestation verify "oci://${image}" \
           --deny-self-hosted-runners \
-          --cert-oidc-issuer "${oidc_issuer}" \
-          --cert-identity "${build_signer_identity}" \
-          --repo "${repository}"
+          --cert-oidc-issuer "https://token.actions.githubusercontent.com" \
+          --cert-identity "${IMAGE_SIGNER_WORKFLOW}@${IMAGE_SIGNER_DIGEST}" \
+          --repo "${IMAGE_REPOSITORY}"
 
-        chmod +x "${executable_file}"
-        mv "${executable_file}" "/usr/local/bin/${EXECUTABLE}"
+        docker run --interactive --rm --user 1111:1111 --read-only \
+          --security-opt no-new-privileges --cap-drop all --network none \
+          "${image}" --version
         echo "::endgroup::"
       shell: bash
 
     - name: Run valid
       env:
+        IMAGE_REPO_DIGEST: ${{ steps.image.outputs.repo-digest }}
         VALUE: ${{ inputs.value }}
         NOT_EMPTY: ${{ inputs.not-empty }}
         DIGIT: ${{ inputs.digit }}
@@ -279,7 +240,9 @@ runs:
           flags+=(--pattern "${PATTERN}")
         fi
 
-        valid "${flags[@]}"
+        docker run --interactive --rm --user 1111:1111 --read-only \
+          --security-opt no-new-privileges --cap-drop all --network none \
+          "${IMAGE_REPO_DIGEST}" "${flags[@]}"
         echo "::endgroup::"
       shell: bash
 
