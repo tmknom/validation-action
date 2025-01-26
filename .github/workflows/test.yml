@@ -435,6 +435,42 @@ jobs:
           set -x
           test "${ACTUAL}" = "${EXPECTED}"
 
+  test-uuid:
+    name: Test uuid
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - value: "b4563933-7bf8-4d9b-b4cd-d0c6f85b5925"
+            uuid: true
+            expected: success
+          - value: "b4563933-7bf8-4d9b-b4cd-d0c6f85b592"
+            uuid: true
+            expected: failure
+    steps:
+      - name: Checkout
+        uses: tmknom/checkout-action@v1
+
+      - name: Exercise
+        id: exercise
+        uses: ./
+        continue-on-error: true
+        with:
+          value: ${{ matrix.value }}
+          uuid: ${{ matrix.uuid }}
+
+      - name: Verify
+        env:
+          EXPECTED: ${{ matrix.expected }}
+          ACTUAL: ${{ steps.exercise.outcome }}
+        run: |
+          set -x
+          test "${ACTUAL}" = "${EXPECTED}"
+
   test-base64:
     name: Test base64
     runs-on: ubuntu-latest
