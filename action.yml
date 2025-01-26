@@ -39,6 +39,9 @@ inputs:
   semver:
     required: false
     description: Validates whether the input value is a valid semantic version.
+  uuid:
+    required: false
+    description: Validates whether the input value is a valid UUID.
   base64:
     required: false
     description: Validates whether the input value is valid Base64.
@@ -69,6 +72,7 @@ inputs:
   pattern:
     required: false
     description: Validates whether the input value matches the specified regular expression.
+
 
 runs:
   using: composite
@@ -141,6 +145,7 @@ runs:
         URL: ${{ inputs.url }}
         EMAIL: ${{ inputs.email }}
         SEMVER: ${{ inputs.semver }}
+        UUID: ${{ inputs.uuid }}
         BASE64: ${{ inputs.base64 }}
         JSON: ${{ inputs.json }}
         EXACT_LENGTH: ${{ inputs.exact-length }}
@@ -198,6 +203,10 @@ runs:
 
         if [[ "${SEMVER}" != "" && "${SEMVER}" != "false" ]]; then
           flags+=(--semver)
+        fi
+
+        if [[ "${UUID}" != "" && "${UUID}" != "false" ]]; then
+          flags+=(--uuid)
         fi
 
         if [[ "${BASE64}" != "" && "${BASE64}" != "false" ]]; then
