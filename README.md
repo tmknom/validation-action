@@ -35,6 +35,7 @@ Validates the input values against formats, patterns, ranges, character sets, an
 | printable-ascii | Validates whether the input value contains only printable ASCII characters. | n/a | no |
 | semver | Validates whether the input value is a valid semantic version. | n/a | no |
 | timestamp | Validates whether the input value matches a timestamp format [rfc3339, datetime, date, time]. | n/a | no |
+| upper-case | Validates whether the input value contains only upper case unicode letters. | n/a | no |
 | url | Validates whether the input value is a valid URL. | n/a | no |
 | uuid | Validates whether the input value is a valid UUID. | n/a | no |
 

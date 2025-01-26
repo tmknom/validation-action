@@ -27,6 +27,9 @@ inputs:
   lower-case:
     required: false
     description: Validates whether the input value contains only lower case unicode letters.
+  upper-case:
+    required: false
+    description: Validates whether the input value contains only upper case unicode letters.
   int:
     required: false
     description: Validates whether the input value is an integer.
@@ -147,6 +150,7 @@ runs:
         ASCII: ${{ inputs.ascii }}
         PRINTABLE_ASCII: ${{ inputs.printable-ascii }}
         LOWER_CASE: ${{ inputs.lower-case }}
+        UPPER_CASE: ${{ inputs.upper-case }}
         INT: ${{ inputs.int }}
         FLOAT: ${{ inputs.float }}
         URL: ${{ inputs.url }}
@@ -195,6 +199,10 @@ runs:
 
         if [[ "${LOWER_CASE}" != "" && "${LOWER_CASE}" != "false" ]]; then
           flags+=(--lower-case)
+        fi
+
+        if [[ "${UPPER_CASE}" != "" && "${UPPER_CASE}" != "false" ]]; then
+          flags+=(--upper-case)
         fi
 
         if [[ "${INT}" != "" && "${INT}" != "false" ]]; then
