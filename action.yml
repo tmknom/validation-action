@@ -108,8 +108,8 @@ runs:
       id: image
       env:
         IMAGE_REPOSITORY: tmknom/valid
-        IMAGE_DIGEST: sha256:6a35c9c26c24caa5af706c31299d46e56eb967955cac0d69bf337e5162320973 # v0.3.1
-        IMAGE_SOURCE_DIGEST: 912504fca82a81560dfee4bfc668f2eabaf8230b
+        IMAGE_DIGEST: sha256:2d9224a06974248a00da06dedcec4cffbf0848d2266e620d216d2fccf84ff2d3 # v0.4.0
+        IMAGE_SOURCE_DIGEST: 6b3f1927953dfff7dab094ad0ed2c5e404cf46d3
         IMAGE_SIGNER_DIGEST: c828b3f16d93cced26547858bf2f73c9790f3099
         IMAGE_SIGNER_WORKFLOW: https://github.com/tmknom/release-workflows/.github/workflows/go.yml
         GITHUB_TOKEN: ${{ github.token }}
