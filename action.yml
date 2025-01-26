@@ -33,6 +33,9 @@ inputs:
   url:
     required: false
     description: Validates whether the input value is a valid URL.
+  domain:
+    required: false
+    description: Validates whether the input value is a valid domain.
   email:
     required: false
     description: Validates whether the input value is a valid email address.
@@ -143,6 +146,7 @@ runs:
         INT: ${{ inputs.int }}
         FLOAT: ${{ inputs.float }}
         URL: ${{ inputs.url }}
+        DOMAIN: ${{ inputs.domain }}
         EMAIL: ${{ inputs.email }}
         SEMVER: ${{ inputs.semver }}
         UUID: ${{ inputs.uuid }}
@@ -195,6 +199,10 @@ runs:
 
         if [[ "${URL}" != "" && "${URL}" != "false" ]]; then
           flags+=(--url)
+        fi
+
+        if [[ "${DOMAIN}" != "" && "${DOMAIN}" != "false" ]]; then
+          flags+=(--domain)
         fi
 
         if [[ "${EMAIL}" != "" && "${EMAIL}" != "false" ]]; then

@@ -18,6 +18,7 @@ Validates the input values against formats, patterns, ranges, character sets, an
 | ascii | Validates whether the input value contains only ASCII characters. | n/a | no |
 | base64 | Validates whether the input value is valid Base64. | n/a | no |
 | digit | Validates whether the input value contains only digits (0-9). | n/a | no |
+| domain | Validates whether the input value is a valid domain. | n/a | no |
 | email | Validates whether the input value is a valid email address. | n/a | no |
 | enum | Validates whether the input value matches any of the specified enumerations. | n/a | no |
 | exact-length | Validates whether the input value's length is exactly equal to the specified number. | n/a | no |
