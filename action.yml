@@ -6,6 +6,9 @@ inputs:
   value:
     required: true
     description: The value to validate.
+  mask-value:
+    required: false
+    description: Masks the `value` input in logs to protect sensitive data.
   not-empty:
     required: false
     description: Validates whether the input value is not empty.
@@ -143,6 +146,7 @@ runs:
       env:
         IMAGE_REPO_DIGEST: ${{ steps.image.outputs.repo-digest }}
         VALUE: ${{ inputs.value }}
+        MASK_VALUE: ${{ inputs.mask-value }}
         NOT_EMPTY: ${{ inputs.not-empty }}
         DIGIT: ${{ inputs.digit }}
         ALPHA: ${{ inputs.alpha }}
@@ -271,6 +275,11 @@ runs:
 
         if [[ "${PATTERN}" != "" ]]; then
           flags+=(--pattern "${PATTERN}")
+        fi
+
+        if [[ "${MASK_VALUE}" != "" && "${MASK_VALUE}" != "false" ]]; then
+          flags+=(--mask-value)
+          set +x # disable printing of the command and its arguments
         fi
 
         docker run --interactive --rm --user 1111:1111 --read-only \
