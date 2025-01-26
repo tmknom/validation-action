@@ -24,6 +24,9 @@ inputs:
   printable-ascii:
     required: false
     description: Validates whether the input value contains only printable ASCII characters.
+  lower-case:
+    required: false
+    description: Validates whether the input value contains only lower case unicode letters.
   int:
     required: false
     description: Validates whether the input value is an integer.
@@ -143,6 +146,7 @@ runs:
         ALPHANUMERIC: ${{ inputs.alphanumeric }}
         ASCII: ${{ inputs.ascii }}
         PRINTABLE_ASCII: ${{ inputs.printable-ascii }}
+        LOWER_CASE: ${{ inputs.lower-case }}
         INT: ${{ inputs.int }}
         FLOAT: ${{ inputs.float }}
         URL: ${{ inputs.url }}
@@ -187,6 +191,10 @@ runs:
 
         if [[ "${PRINTABLE_ASCII}" != "" && "${PRINTABLE_ASCII}" != "false" ]]; then
           flags+=(--printable-ascii)
+        fi
+
+        if [[ "${LOWER_CASE}" != "" && "${LOWER_CASE}" != "false" ]]; then
+          flags+=(--lower-case)
         fi
 
         if [[ "${INT}" != "" && "${INT}" != "false" ]]; then

@@ -237,6 +237,42 @@ jobs:
           set -x
           test "${ACTUAL}" = "${EXPECTED}"
 
+  test-lower-case:
+    name: Test lower-case
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - value: abc
+            lower-case: true
+            expected: success
+          - value: abcABC
+            lower-case: true
+            expected: failure
+    steps:
+      - name: Checkout
+        uses: tmknom/checkout-action@v1
+
+      - name: Exercise
+        id: exercise
+        uses: ./
+        continue-on-error: true
+        with:
+          value: ${{ matrix.value }}
+          lower-case: ${{ matrix.lower-case }}
+
+      - name: Verify
+        env:
+          EXPECTED: ${{ matrix.expected }}
+          ACTUAL: ${{ steps.exercise.outcome }}
+        run: |
+          set -x
+          test "${ACTUAL}" = "${EXPECTED}"
+
   test-int:
     name: Test int
     runs-on: ubuntu-latest
