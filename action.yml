@@ -175,7 +175,7 @@ runs:
       run: |
         echo "::group::Run valid"
         set -x
-        flags=(--value "${VALUE}")
+        flags=(--value "${VALUE}" --format "github-actions")
 
         if [[ "${NOT_EMPTY}" != "" && "${NOT_EMPTY}" != "false" ]]; then
           flags+=(--not-empty)
