@@ -26,10 +26,12 @@ jobs:
       matrix:
         include:
           - value: MaskedSecret
+            value-name: id-number
             mask-value: true
             digit: true
             expected: failure
           - value: UnmaskedSecret
+            value-name: id-number
             mask-value: false
             digit: true
             expected: failure
@@ -43,6 +45,7 @@ jobs:
         continue-on-error: true
         with:
           value: ${{ matrix.value }}
+          value-name: ${{ matrix.value-name }}
           mask-value: ${{ matrix.mask-value }}
           digit: ${{ matrix.digit }}
 
