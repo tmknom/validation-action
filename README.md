@@ -64,22 +64,44 @@ N/A
 
 ## FAQ
 
-### What Happens When a Validation Error Occurs?
+### What happens when a validation error occurs?
 
-The workflow stops with an error because the action returns a non-zero exit code when it detects a validation error.
+The workflow fails because the action returns a non-zero exit code.
+Check the error annotation for details.
 
-### Can I Continue Processing Despite Validation Errors?
+### What happens if I specify multiple validation rules?
 
-Yes, you can use the `continue-on-error` key.
-For example, you can configure the action like this to keep processing even if a validation error happens.
+If you specify multiple rules (e.g., `alpha`, `max-length`, `not-empty`),
+the action applies all of them in sequence.
+The input must satisfy all rules to be considered valid.
+
+### Can I hide sensitive values in error messages?
+
+Yes, setting `mask-value: true` will mask the `value` input in error messages.
+This is useful for sensitive data like tokens, passwords, or API keys.
+
+### Can I customize error messages for better clarity?
+
+Yes, use `value-name` to provide a custom name for the validated value.
+This name appears in error messages, improving clarity.
+
+### Can I continue processing despite validation errors?
+
+Yes, set `continue-on-error: true`.
+For example, this configuration allows processing to continue even if validation fails:
 
 ```yaml
 - uses: tmknom/validation-action@v0
   with:
-    value: foo
-    not-empty: true
+    value: invalid
+    digit: true
   continue-on-error: true
 ```
+
+### What happens if no validation rules are specified?
+
+The action runs but performs no validation.
+Specify at least one rule to enable validation.
 
 ## Related projects
 
