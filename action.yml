@@ -8,10 +8,10 @@ inputs:
     description: The value to validate.
   value-name:
     required: false
-    description: The name of the value to include in error messages.
+    description: The name of the `value` input to include in error messages.
   mask-value:
     required: false
-    description: Masks the `value` input in logs to protect sensitive data.
+    description: Masks the `value` input in error messages to protect sensitive data.
   not-empty:
     required: false
     description: Validates whether the input value is not empty.
