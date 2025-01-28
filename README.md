@@ -39,6 +39,7 @@ Validates the input values against formats, patterns, ranges, character sets, an
 | upper-case | Validates whether the input value contains only upper case unicode letters. | n/a | no |
 | url | Validates whether the input value is a valid URL. | n/a | no |
 | uuid | Validates whether the input value is a valid UUID. | n/a | no |
+| value-name | The name of the value to include in error messages. | n/a | no |
 
 ## Outputs
 

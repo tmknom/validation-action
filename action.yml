@@ -6,6 +6,9 @@ inputs:
   value:
     required: true
     description: The value to validate.
+  value-name:
+    required: false
+    description: The name of the value to include in error messages.
   mask-value:
     required: false
     description: Masks the `value` input in logs to protect sensitive data.
@@ -146,6 +149,7 @@ runs:
       env:
         IMAGE_REPO_DIGEST: ${{ steps.image.outputs.repo-digest }}
         VALUE: ${{ inputs.value }}
+        VALUE_NAME: ${{ inputs.value-name }}
         MASK_VALUE: ${{ inputs.mask-value }}
         NOT_EMPTY: ${{ inputs.not-empty }}
         DIGIT: ${{ inputs.digit }}
@@ -176,6 +180,10 @@ runs:
         echo "::group::Run valid"
         set -x
         flags=(--value "${VALUE}" --format "github-actions")
+
+        if [[ "${VALUE_NAME}" != "" ]]; then
+          flags+=(--value-name "${VALUE_NAME}")
+        fi
 
         if [[ "${NOT_EMPTY}" != "" && "${NOT_EMPTY}" != "false" ]]; then
           flags+=(--not-empty)
