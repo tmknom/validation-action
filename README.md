@@ -26,7 +26,7 @@ Validates the input values against formats, patterns, ranges, character sets, an
 | int | Validates whether the input value is an integer. | n/a | no |
 | json | Validates whether the input value is valid JSON. | n/a | no |
 | lower-case | Validates whether the input value contains only lower case unicode letters. | n/a | no |
-| mask-value | Masks the `value` input in logs to protect sensitive data. | n/a | no |
+| mask-value | Masks the `value` input in error messages to protect sensitive data. | n/a | no |
 | max | Validates whether the input value is less than or equal to the specified maximum. | n/a | no |
 | max-length | Validates whether the input value's length is less than or equal to the specified maximum. | n/a | no |
 | min | Validates whether the input value is greater than or equal to the specified minimum. | n/a | no |
@@ -39,7 +39,7 @@ Validates the input values against formats, patterns, ranges, character sets, an
 | upper-case | Validates whether the input value contains only upper case unicode letters. | n/a | no |
 | url | Validates whether the input value is a valid URL. | n/a | no |
 | uuid | Validates whether the input value is a valid UUID. | n/a | no |
-| value-name | The name of the value to include in error messages. | n/a | no |
+| value-name | The name of the `value` input to include in error messages. | n/a | no |
 
 ## Outputs
 
