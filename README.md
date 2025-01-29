@@ -53,13 +53,59 @@ N/A
 
 ## Usage
 
+### Applying Multiple Validation Rules
+
 ```yaml
   steps:
     - name: Validation
       uses: tmknom/validation-action@v0
       with:
-        value: foo
+        value: invalid
         not-empty: true
+        digit: true
+        min-length: 10
+```
+
+When multiple validation rules are specified, each generates an error message in Issues:
+
+```shell
+Validation error: The specified value "invalid" is invalid. Issues: the length must be no less than 10, must contain digits only.
+```
+
+### Masking Input Values
+
+```yaml
+  steps:
+    - name: Validation
+      uses: tmknom/validation-action@v0
+      with:
+        value: ${{ secrets.INVALID_TOKEN }}
+        mask-value: true
+        alpha: true
+```
+
+When `mask-value` is set to `true`, the `value` input is masked in error messages:
+
+```shell
+Validation error: The specified value "***" is invalid. Issues: must contain English letters only.
+```
+
+### Enhancing Error Message Clarity
+
+```yaml
+  steps:
+    - name: Validation
+      uses: tmknom/validation-action@v0
+      with:
+        value: invalid
+        value-name: account-id
+        digit: true
+```
+
+When `value-name` is specified, it customizes error messages by replacing "value" with the given name:
+
+```shell
+Validation error: The specified account-id "invalid" is invalid. Issues: must contain digits only.
 ```
 
 ## FAQ
