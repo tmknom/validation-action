@@ -66,7 +66,7 @@ N/A
         min-length: 10
 ```
 
-When multiple validation rules are specified, each generates an error message in Issues:
+When multiple validation rules are specified, each rule contributes to the error message, and they are all displayed together:
 
 ```shell
 Validation error: The specified value "invalid" is invalid. Issues: the length must be no less than 10, must contain digits only.
@@ -90,6 +90,8 @@ When `mask-value` is set to `true`, the `value` input is masked in error message
 Validation error: The specified value "***" is invalid. Issues: must contain English letters only.
 ```
 
+This is particularly useful for masking sensitive data like tokens or passwords to prevent exposure in logs.
+
 ### Enhancing Error Message Clarity
 
 ```yaml
@@ -107,6 +109,8 @@ When `value-name` is specified, it customizes error messages by replacing "value
 ```shell
 Validation error: The specified account-id "invalid" is invalid. Issues: must contain digits only.
 ```
+
+This helps distinguish which value caused the error when validating multiple values.
 
 ## FAQ
 
