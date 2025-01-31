@@ -43,7 +43,9 @@ Validates the input values against formats, patterns, ranges, character sets, an
 
 ## Outputs
 
-N/A
+| Name | Description |
+| :--- | :---------- |
+| error-message | Output error messages when validation fails. |
 
 <!-- actdocs end -->
 

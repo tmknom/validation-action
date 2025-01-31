@@ -15,6 +15,30 @@ defaults:
     shell: bash
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: tmknom/checkout-action@v1
+
+      - name: Exercise
+        id: exercise
+        uses: ./
+        continue-on-error: true
+        with:
+          value: invalid
+          digit: true
+          min-length: 10
+
+      - name: Verify
+        env:
+          ACTUAL: ${{ steps.exercise.outputs.error-message }}
+        run: |
+          set -x
+          test "${ACTUAL}" = '::error::Validation error: The specified value "invalid" is invalid. Issues: the length must be no less than 10, must contain digits only.'
+
   test-mask-value:
     name: Test mask-value
     runs-on: ubuntu-latest
