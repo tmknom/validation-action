@@ -63,12 +63,12 @@ N/A
       uses: tmknom/validation-action@v0
       with:
         value: invalid
-        not-empty: true
         digit: true
         min-length: 10
 ```
 
-When multiple validation rules are specified, each rule contributes to the error message, and they are all displayed together:
+When multiple validation rules are specified, they are applied sequentially.
+If the input value fails any rule, the error message includes all validation failures:
 
 ```shell
 Validation error: The specified value "invalid" is invalid. Issues: the length must be no less than 10, must contain digits only.
