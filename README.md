@@ -6,7 +6,7 @@ Validates whether input values meet specified rules.
 
 ## Description
 
-Validates the input values against formats, patterns, ranges, character sets, and other user-defined rules.
+Validates input values against character sets, ranges, formats, and other user-defined rules to ensure data consistency.
 
 ## Inputs
 
