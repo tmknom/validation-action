@@ -67,6 +67,24 @@ This action helps maintain data consistency across various use cases.
 
 ## Usage
 
+This action supports various validation rules, including:
+
+- **Character sets**: Contains only specific character sets, such as ASCII, digits, or alphanumeric characters.
+- **Ranges**: Falls within specified numerical, string length, or date ranges.
+- **Formats**: Follows a valid format, such as timestamps, URLs, or semantic versions.
+- **User-defined rules**: Matches custom rules, such as enumerations or regular expressions.
+
+The `value` input is required. You can specify validation rules using multiple inputs. For example:
+
+```yaml
+  steps:
+    - name: Validation
+      uses: tmknom/validation-action@v0
+      with:
+        value: example
+        not-empty: true
+```
+
 ### Applying Multiple Validation Rules
 
 ```yaml
@@ -74,7 +92,7 @@ This action helps maintain data consistency across various use cases.
     - name: Validation
       uses: tmknom/validation-action@v0
       with:
-        value: invalid
+        value: example
         digit: true
         min-length: 10
 ```
@@ -83,7 +101,43 @@ When multiple validation rules are specified, they are applied sequentially.
 If the input value fails any rule, the error message includes all validation failures:
 
 ```shell
-Validation error: The specified value "invalid" is invalid. Issues: the length must be no less than 10, must contain digits only.
+Validation error: The specified value "example" is invalid. Issues: the length must be no less than 10, must contain digits only.
+```
+
+### Using `enum` for Allowed Values
+
+```yaml
+  steps:
+    - name: Validation
+      uses: tmknom/validation-action@v0
+      with:
+        value: example
+        enum: admin,user,guest
+```
+
+In this example, the `value` must be one of the specified options (`admin`, `user`, or `guest`).
+If the input does not match any of these values, an error is returned:
+
+```shell
+Validation error: The specified value "example" is invalid. Issues: must be one of [admin user guest].
+```
+
+### Using `pattern` for Custom Regex Matching
+
+```yaml
+  steps:
+    - name: Validation
+      uses: tmknom/validation-action@v0
+      with:
+        value: invalid+example.com
+        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+```
+
+In this example, the `value` is validated against the provided regular expression.
+If it does not match, an error is returned:
+
+```shell
+Validation error: The specified value "invalid+example.com" is invalid. Issues: must be in a valid format.
 ```
 
 ### Masking Input Values
@@ -93,7 +147,7 @@ Validation error: The specified value "invalid" is invalid. Issues: the length m
     - name: Validation
       uses: tmknom/validation-action@v0
       with:
-        value: ${{ secrets.INVALID_TOKEN }}
+        value: ${{ secrets.EXAMPLE_TOKEN }}
         mask-value: true
         alpha: true
 ```
@@ -113,7 +167,7 @@ This is particularly useful for masking sensitive data like tokens or passwords 
     - name: Validation
       uses: tmknom/validation-action@v0
       with:
-        value: invalid
+        value: example
         value-name: account-id
         digit: true
 ```
@@ -121,7 +175,7 @@ This is particularly useful for masking sensitive data like tokens or passwords 
 When `value-name` is specified, it customizes error messages by replacing "value" with the given name:
 
 ```shell
-Validation error: The specified account-id "invalid" is invalid. Issues: must contain digits only.
+Validation error: The specified account-id "example" is invalid. Issues: must contain digits only.
 ```
 
 This helps distinguish which value caused the error when validating multiple values.
