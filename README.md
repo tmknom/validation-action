@@ -69,7 +69,7 @@ This action helps maintain data consistency across various use cases.
 
 This action supports various validation rules, including:
 
-- **Character sets**: Contains only specific character sets, such as ASCII, digits, or alphanumeric characters.
+- **Character sets**: Restricts input to specific character sets, such as ASCII, digits, or alphanumeric characters.
 - **Ranges**: Falls within specified numerical, string length, or date ranges.
 - **Formats**: Follows a valid format, such as timestamps, URLs, or semantic versions.
 - **User-defined rules**: Matches custom rules, such as enumerations or regular expressions.
@@ -115,7 +115,7 @@ Validation error: The specified value "example" is invalid. Issues: the length m
         enum: admin,user,guest
 ```
 
-In this example, the `value` must be one of the specified options (`admin`, `user`, or `guest`).
+The `value` must match one of the specified options: `admin`, `user`, or `guest`.
 If the input does not match any of these values, an error is returned:
 
 ```shell
@@ -133,7 +133,7 @@ Validation error: The specified value "example" is invalid. Issues: must be one 
         pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 ```
 
-In this example, the `value` is validated against the provided regular expression.
+The `value` must match the specified regular expression.
 If it does not match, an error is returned:
 
 ```shell
@@ -152,7 +152,7 @@ Validation error: The specified value "invalid+example.com" is invalid. Issues: 
         alpha: true
 ```
 
-When `mask-value` is set to `true`, the `value` input is masked in error messages:
+When `mask-value` is `true`, the `value` input is replaced with "***" in error messages:
 
 ```shell
 Validation error: The specified value "***" is invalid. Issues: must contain English letters only.
@@ -182,31 +182,74 @@ This helps distinguish which value caused the error when validating multiple val
 
 ## FAQ
 
+### What happens if I specify multiple validation rules?
+
+If you specify multiple rules, the action applies them sequentially.
+The `value` input must satisfy **all specified rules** to be considered valid.
+For example, if you specify both `digit` and `min-length`, the input must consist only of digits and be at least the specified length.
+
 ### What happens when a validation error occurs?
 
 The workflow fails because the action returns a non-zero exit code.
-Check the error annotation for details.
+The error messages are displayed using **error annotations**, following this structure:
 
-### What happens if I specify multiple validation rules?
+```shell
+Validation error: The specified value "<input-value>" is invalid. Issues: <list-of-issues>
+```
 
-If you specify multiple rules (e.g., `alpha`, `max-length`, `not-empty`),
-the action applies all of them in sequence.
-The input must satisfy all rules to be considered valid.
+Example:
+
+```shell
+Validation error: The specified value "invalid" is invalid. Issues: the value must contain only digits, the length must be at least 10 characters.
+```
+
+This message clearly indicates which rules were violated.
+If multiple rules fail, the error message lists all validation issues.
+
+> [!NOTE]
+>
+> The error annotations are a feature of GitHub Actions called workflow commands.
+> For more information, see the [GitHub Documentation](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions).
+
+### What are some common validation errors?
+
+Common validation errors include:
+
+- Invalid format (e.g., incorrect email, URL, or timestamp).
+- Length constraints not met (e.g., too short or too long).
+- Value does not match any allowed options in an `enum`.
+
+Example error messages:
+
+- **Invalid email format**:
+  ```shell
+  Validation error: The specified value "invalid-email" is invalid. Issues: must be a valid email address.
+  ```
+- **Pattern mismatch**:
+  ```shell
+  Validation error: The specified value "invalid+example.com" is invalid. Issues: must be in a valid format.
+  ```
+- **Length too short**:
+  ```shell
+  Validation error: The specified value "short" is invalid. Issues: length must be at least 10 characters.
+  ```
+
+These messages provide clear feedback, helping you quickly correct the input.
 
 ### Can I hide sensitive values in error messages?
 
-Yes, setting `mask-value: true` will mask the `value` input in error messages.
+Yes, set the `mask-value: true` to replace the `value` input with `***` in error messages.
 This is useful for sensitive data like tokens, passwords, or API keys.
 
-### Can I customize error messages for better clarity?
+### Can I customize error messages to make debugging easier?
 
-Yes, use `value-name` to provide a custom name for the validated value.
-This name appears in error messages, improving clarity.
+Yes, set the `value-name` input to a custom name for the validated value.
+This replaces "value" in error messages, making it easier to identify the source of errors.
+This is especially helpful when running the action multiple times in a single workflow, as it clarifies which value caused the issue.
 
 ### Can I continue processing despite validation errors?
 
-Yes, set `continue-on-error: true`.
-For example, this configuration allows processing to continue even if validation fails:
+Yes, set `continue-on-error: true` to allow the workflow to proceed even if validation fails:
 
 ```yaml
 - uses: tmknom/validation-action@v0
@@ -216,10 +259,18 @@ For example, this configuration allows processing to continue even if validation
   continue-on-error: true
 ```
 
+This logs validation errors but allows the workflow to continue.
+
+> [!NOTE]
+>
+> The `continue-on-error` setting is not handled by the action itself.
+> It is part of GitHub Actions' workflow syntax.
+> For more information, see the [GitHub Documentation](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idcontinue-on-error).
+
 ### What happens if no validation rules are specified?
 
-The action runs but performs no validation.
-Specify at least one rule to enable validation.
+The action runs but does not perform any validation.
+To prevent unintended behavior, specify at least one rule.
 
 ## Related projects
 
