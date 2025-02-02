@@ -223,7 +223,7 @@ Specify at least one rule to enable validation.
 
 ## Related projects
 
-- [valid](https://github.com/tmknom/valid): The CLI tool validates whether input values meet specified rules.
+- [valid](https://github.com/tmknom/valid): The CLI tool validates input values based on specified rules. It can be used for validation both locally and in CI environments, just like this action.
 
 ## Release notes
 
