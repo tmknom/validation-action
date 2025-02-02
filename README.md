@@ -53,6 +53,18 @@ Validates the input values against formats, patterns, ranges, character sets, an
 
 N/A
 
+## Why
+
+This action validates input values against specified criteria, offering the following benefits:
+
+- **Increased reliability**: Ensures consistent validation as workflows grow in complexity, supporting long-term maintainability.
+- **Fewer errors**: Catches input-related issues early by enforcing predefined standards.
+- **Time savings**: Eliminates the need for custom validation scripts, freeing up time for more critical tasks.
+- **Better reusability**: Provides a standardized validation approach, particularly useful in Composite Actions and Reusable Workflows.
+- **Stronger security**: Uses dependencies pinned to digests and verified with keyless signing for secure execution.
+
+This action helps maintain data consistency across various use cases.
+
 ## Usage
 
 ### Applying Multiple Validation Rules
