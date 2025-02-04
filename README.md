@@ -12,34 +12,34 @@ Validates input values against character sets, ranges, formats, and custom rules
 
 | Name | Description | Default | Required |
 | :--- | :---------- | :------ | :------: |
-| value | The value to validate. | n/a | yes |
-| alpha | Validates whether the input value contains only English letters (a-zA-Z). | n/a | no |
-| alphanumeric | Validates whether the input value contains only English letters and digits (a-zA-Z0-9). | n/a | no |
-| ascii | Validates whether the input value contains only ASCII characters. | n/a | no |
-| base64 | Validates whether the input value is valid Base64. | n/a | no |
-| digit | Validates whether the input value contains only digits (0-9). | n/a | no |
-| domain | Validates whether the input value is a valid domain. | n/a | no |
-| email | Validates whether the input value is a valid email address. | n/a | no |
-| enum | Validates whether the input value matches any of the specified enumerations. | n/a | no |
-| exact-length | Validates whether the input value's length is exactly equal to the specified number. | n/a | no |
-| float | Validates whether the input value is a floating-point number. | n/a | no |
-| int | Validates whether the input value is an integer. | n/a | no |
-| json | Validates whether the input value is valid JSON. | n/a | no |
-| lower-case | Validates whether the input value contains only lower case unicode letters. | n/a | no |
-| mask-value | Masks the `value` input in error messages to protect sensitive data. | n/a | no |
-| max | Validates whether the input value is less than or equal to the specified maximum. | n/a | no |
-| max-length | Validates whether the input value's length is less than or equal to the specified maximum. | n/a | no |
-| min | Validates whether the input value is greater than or equal to the specified minimum. | n/a | no |
-| min-length | Validates whether the input value's length is greater than or equal to the specified minimum. | n/a | no |
-| not-empty | Validates whether the input value is not empty. | n/a | no |
-| pattern | Validates whether the input value matches the specified regular expression. | n/a | no |
-| printable-ascii | Validates whether the input value contains only printable ASCII characters. | n/a | no |
-| semver | Validates whether the input value is a valid semantic version. | n/a | no |
-| timestamp | Validates whether the input value matches a timestamp format [rfc3339, datetime, date, time]. | n/a | no |
-| upper-case | Validates whether the input value contains only upper case unicode letters. | n/a | no |
-| url | Validates whether the input value is a valid URL. | n/a | no |
-| uuid | Validates whether the input value is a valid UUID. | n/a | no |
-| value-name | The name of the `value` input to include in error messages. | n/a | no |
+| value | The value to validate against the specified rules. | n/a | yes |
+| alpha | Validates that the `value` contains only English letters (a-zA-Z). | n/a | no |
+| alphanumeric | Validates that the `value` contains only English letters and digits (a-zA-Z0-9). | n/a | no |
+| ascii | Validates that the `value` contains only ASCII characters. | n/a | no |
+| base64 | Validates that the `value` is a valid Base64 string. | n/a | no |
+| digit | Validates that the `value` contains only digits (0-9). | n/a | no |
+| domain | Validates that the `value` is a valid domain. | n/a | no |
+| email | Validates that the `value` is a valid email address. | n/a | no |
+| enum | Validates that the `value` matches one of the specified enumerations (comma-separated list). | n/a | no |
+| exact-length | Validates that the length of `value` is exactly the specified number. | n/a | no |
+| float | Validates that the `value` is a floating-point number. | n/a | no |
+| int | Validates that the `value` is an integer. | n/a | no |
+| json | Validates that the `value` is a valid JSON string. | n/a | no |
+| lower-case | Validates that the `value` contains only lower case Unicode letters. | n/a | no |
+| mask-value | Masks the `value` in error messages to protect sensitive data. | n/a | no |
+| max | Validates that the `value` is less than or equal to the specified maximum. | n/a | no |
+| max-length | Validates that the length of `value` is less than or equal to the specified maximum. | n/a | no |
+| min | Validates that the `value` is greater than or equal to the specified minimum. | n/a | no |
+| min-length | Validates that the length of `value` is greater than or equal to the specified minimum. | n/a | no |
+| not-empty | Validates that the `value` is not empty. | n/a | no |
+| pattern | Validates that the `value` matches the specified regular expression. | n/a | no |
+| printable-ascii | Validates that the `value` contains only printable ASCII characters. | n/a | no |
+| semver | Validates that the `value` is a valid semantic version. | n/a | no |
+| timestamp | Validates that the `value` matches the timestamp format specified in the `timestamp` input (rfc3339, datetime, date, or time). | n/a | no |
+| upper-case | Validates that the `value` contains only upper case Unicode letters. | n/a | no |
+| url | Validates that the `value` is a valid URL. | n/a | no |
+| uuid | Validates that the `value` is a valid UUID. | n/a | no |
+| value-name | The name of the `value` to include in error messages. | n/a | no |
 
 ## Outputs
 
