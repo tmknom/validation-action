@@ -51,39 +51,30 @@ Validates input values against character sets, ranges, formats, and custom rules
 
 ## Permissions
 
-N/A
+This action does not require any additional `GITHUB_TOKEN` permissions.
 
 ## Why
 
-This action validates input values against specified criteria, offering the following benefits:
+This action validates input values against specified criteria, providing the following benefits:
 
-- **Increased reliability**: Ensures consistent validation as workflows grow in complexity, supporting long-term maintainability.
-- **Fewer errors**: Catches input-related issues early by enforcing predefined standards.
-- **Time savings**: Eliminates the need for custom validation scripts, freeing up time for more critical tasks.
-- **Better reusability**: Provides a standardized validation approach, particularly useful in Composite Actions and Reusable Workflows.
-- **Stronger security**: Uses dependencies pinned to digests and verified with keyless signing for secure execution.
+- **Fewer errors**: Catches invalid inputs early, reducing workflow failures.
+- **Time savings**: Eliminates the need for custom validation scripts.
+- **Reliable**: Applies consistent rules as workflows become more complex, improving long-term maintainability.
+- **Reusable**: Offers a standardized validation approach, useful in Composite Actions and Reusable Workflows.
+- **Secure**: Uses dependencies pinned to digests and verified with keyless signing.
 
-This action helps maintain data consistency across various use cases.
+This action helps maintain data consistency across various use cases to ensure valid inputs and prevent workflow failures.
 
 ## Usage
 
+The `value` input is required.
+If omitted, the action fails immediately.
 This action supports various validation rules, including:
 
 - **Character sets**: Restricts input to specific character sets, such as ASCII, digits, or alphanumeric characters.
-- **Ranges**: Falls within specified numerical, string length, or date ranges.
-- **Formats**: Follows a valid format, such as timestamps, URLs, or semantic versions.
-- **User-defined rules**: Matches custom rules, such as enumerations or regular expressions.
-
-The `value` input is required. You can specify validation rules using multiple inputs. For example:
-
-```yaml
-  steps:
-    - name: Validation
-      uses: tmknom/validation-action@v0
-      with:
-        value: example
-        not-empty: true
-```
+- **Ranges**: Ensures values fall within specified numerical, length, or date ranges.
+- **Formats**: Checks if input matches formats, such as timestamps, URLs, or semantic versions.
+- **Custom rules**: Matches user-defined rules like enumerations or regular expressions.
 
 ### Applying Multiple Validation Rules
 
@@ -93,12 +84,13 @@ The `value` input is required. You can specify validation rules using multiple i
       uses: tmknom/validation-action@v0
       with:
         value: example
-        digit: true
         min-length: 10
+        digit: true
 ```
 
-When multiple validation rules are specified, they are applied sequentially.
-If the input value fails any rule, the error message includes all validation failures:
+When multiple validation rules are specified, **all** rules are evaluated sequentially.
+Validation continues even if a rule fails.
+If the input fails any rule, the error message includes all validation failures:
 
 ```shell
 Validation error: The specified value "example" is invalid. Issues: the length must be no less than 10, must contain digits only.
@@ -111,15 +103,8 @@ Validation error: The specified value "example" is invalid. Issues: the length m
     - name: Validation
       uses: tmknom/validation-action@v0
       with:
-        value: example
+        value: example # invalid value
         enum: admin,user,guest
-```
-
-The `value` must match one of the specified options: `admin`, `user`, or `guest`.
-If the input does not match any of these values, an error is returned:
-
-```shell
-Validation error: The specified value "example" is invalid. Issues: must be one of [admin user guest].
 ```
 
 ### Using `pattern` for Custom Regex Matching
@@ -129,38 +114,18 @@ Validation error: The specified value "example" is invalid. Issues: must be one 
     - name: Validation
       uses: tmknom/validation-action@v0
       with:
-        value: invalid+example.com
+        value: invalid+example.com # invalid value
         pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 ```
 
-The `value` must match the specified regular expression.
-If it does not match, an error is returned:
+## Customizing Error Messages
 
-```shell
-Validation error: The specified value "invalid+example.com" is invalid. Issues: must be in a valid format.
-```
+Error messages can be customized by replacing the value name or masking input values.
 
-### Masking Input Values
+### Replacing Value Name
 
-```yaml
-  steps:
-    - name: Validation
-      uses: tmknom/validation-action@v0
-      with:
-        value: ${{ secrets.EXAMPLE_TOKEN }}
-        mask-value: true
-        alpha: true
-```
-
-When `mask-value` is `true`, the `value` input is replaced with "***" in error messages:
-
-```shell
-Validation error: The specified value "***" is invalid. Issues: must contain English letters only.
-```
-
-This is particularly useful for masking sensitive data like tokens or passwords to prevent exposure in logs.
-
-### Enhancing Error Message Clarity
+This feature is helpful when running the action multiple times within a single workflow.
+It clarifies which value caused the issue:
 
 ```yaml
   steps:
@@ -172,80 +137,97 @@ This is particularly useful for masking sensitive data like tokens or passwords 
         digit: true
 ```
 
-When `value-name` is specified, it customizes error messages by replacing "value" with the given name:
+When `value-name` is specified, the error messages replace "value" with the provided name:
 
 ```shell
 Validation error: The specified account-id "example" is invalid. Issues: must contain digits only.
 ```
 
-This helps distinguish which value caused the error when validating multiple values.
+### Masking Input Value
+
+This feature is useful for protecting sensitive data, such as tokens, passwords, or API keys, to prevent exposure in logs:
+
+```yaml
+  steps:
+    - name: Validation
+      uses: tmknom/validation-action@v0
+      with:
+        value: ${{ secrets.EXAMPLE_TOKEN }}
+        mask-value: true
+        alpha: true
+```
+
+When `mask-value` is `true`, the `value` input is replaced with `***` in error messages:
+
+```shell
+Validation error: The specified value "***" is invalid. Issues: must contain English letters only.
+```
 
 ## FAQ
 
-### What happens if I specify multiple validation rules?
+### What happens if validation errors?
 
-If you specify multiple rules, the action applies them sequentially.
-The `value` input must satisfy **all specified rules** to be considered valid.
-For example, if you specify both `digit` and `min-length`, the input must consist only of digits and be at least the specified length.
-
-### What happens when a validation error occurs?
-
-The workflow fails because the action returns a non-zero exit code.
-The error messages are displayed using **error annotations**, following this structure:
+The workflow fails with a non-zero exit code.
+Errors appear as **error annotations**, following this format:
 
 ```shell
 Validation error: The specified value "<input-value>" is invalid. Issues: <list-of-issues>
 ```
 
-Example:
-
-```shell
-Validation error: The specified value "invalid" is invalid. Issues: the value must contain only digits, the length must be at least 10 characters.
-```
-
 This message clearly indicates which rules were violated.
-If multiple rules fail, the error message lists all validation issues.
 
 > [!NOTE]
 >
-> The error annotations are a feature of GitHub Actions called workflow commands.
+> The error annotations are a feature of GitHub Actions called workflow commands, not this action itself.
 > For more information, see the [GitHub Documentation](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions).
 
-### What are some common validation errors?
+### What happens if I specify multiple validation rules?
 
-Common validation errors include:
+All rules are checked sequentially.
+The `value` input must satisfy **all** rules to be valid.
+For example, if you specify both `digit` and `min-length`, the input must consist only of digits and be at least the specified length.
 
-- Invalid format (e.g., incorrect email, URL, or timestamp).
-- Length constraints not met (e.g., too short or too long).
-- Value does not match any allowed options in an `enum`.
-
-Example error messages:
-
-- **Invalid email format**:
-  ```shell
-  Validation error: The specified value "invalid-email" is invalid. Issues: must be a valid email address.
-  ```
-- **Pattern mismatch**:
-  ```shell
-  Validation error: The specified value "invalid+example.com" is invalid. Issues: must be in a valid format.
-  ```
-- **Length too short**:
-  ```shell
-  Validation error: The specified value "short" is invalid. Issues: length must be at least 10 characters.
-  ```
-
-These messages provide clear feedback, helping you quickly correct the input.
+The order in which validation rules are applied is not defined.
+If multiple validation rules fail, all failures will be reported at once, but their order is not defined.
 
 ### Can I hide sensitive values in error messages?
 
-Yes, set the `mask-value: true` to replace the `value` input with `***` in error messages.
-This is useful for sensitive data like tokens, passwords, or API keys.
+Yes, enable the `mask-value` to obscure the input as `***`.
+
+Standard error message:
+
+```shell
+Validation error: The specified value "example" is invalid. Issues: must contain English letters only.
+```
+
+Customized error message:
+
+```shell
+Validation error: The specified value "***" is invalid. Issues: must contain English letters only.
+```
 
 ### Can I customize error messages to make debugging easier?
 
-Yes, set the `value-name` input to a custom name for the validated value.
+Yes, set the `value-name` input to specify a custom name for the validated value.
+
+Standard error message:
+
+```shell
+Validation error: The specified value "example" is invalid. Issues: must contain digits only.
+```
+
+Customized error message:
+
+```shell
+Validation error: The specified account-id "example" is invalid. Issues: must contain digits only.
+```
+
 This replaces "value" in error messages, making it easier to identify the source of errors.
-This is especially helpful when running the action multiple times in a single workflow, as it clarifies which value caused the issue.
+
+### Can I fully customize the error message?
+
+No, at this time, you cannot directly specify a custom error message.
+However, you can modify parts of the message by using the `value-name` or masking sensitive values with the `mask-value`.
 
 ### Can I continue processing despite validation errors?
 
@@ -263,18 +245,22 @@ This logs validation errors but allows the workflow to continue.
 
 > [!NOTE]
 >
-> The `continue-on-error` setting is not handled by the action itself.
-> It is part of GitHub Actions' workflow syntax.
+> The `continue-on-error` setting is a feature of GitHub Actions, not this action itself.
 > For more information, see the [GitHub Documentation](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idcontinue-on-error).
 
 ### What happens if no validation rules are specified?
 
-The action runs but does not perform any validation.
-To prevent unintended behavior, specify at least one rule.
+If no validation rules are set, the action completes successfully without validation.
+No errors or warnings are generated.
+
+This behavior is **intentional** as of now but may change in the future.
+Users should be aware of this to avoid unintentionally skipping validation.
 
 ## Related projects
 
-- [valid](https://github.com/tmknom/valid): The CLI tool validates input values based on specified rules. It can be used for validation both locally and in CI environments, just like this action.
+- [valid](https://github.com/tmknom/valid): A CLI tool that validates input values based on specified rules.
+    - This action internally uses `valid` to perform input validation.
+    - You can use `valid` independently for validation both locally and in CI environments.
 
 ## Release notes
 
