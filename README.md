@@ -120,12 +120,11 @@ Validation error: The specified value "example" is invalid. Issues: the length m
 
 ## Customizing Error Messages
 
-Error messages can be customized by replacing the value name or masking input values.
+You can customize error messages by replacing the value name or masking input values.
 
 ### Replacing Value Name
 
-This feature is helpful when running the action multiple times within a single workflow.
-It clarifies which value caused the issue:
+This is useful when validating multiple inputs in the same workflow, making it easier to identify which value caused the issue:
 
 ```yaml
   steps:
@@ -145,7 +144,7 @@ Validation error: The specified account-id "example" is invalid. Issues: must co
 
 ### Masking Input Value
 
-This feature is useful for protecting sensitive data, such as tokens, passwords, or API keys, to prevent exposure in logs:
+This feature prevents sensitive data, such as tokens, passwords, or API keys, from being exposed in logs by replacing the input value in error messages:
 
 ```yaml
   steps:
@@ -165,7 +164,7 @@ Validation error: The specified value "***" is invalid. Issues: must contain Eng
 
 ## FAQ
 
-### What happens if validation errors?
+### What happens if validation fails?
 
 The workflow fails with a non-zero exit code.
 Errors appear as **error annotations**, following this format:
@@ -187,24 +186,8 @@ All rules are checked sequentially.
 The `value` input must satisfy **all** rules to be valid.
 For example, if you specify both `digit` and `min-length`, the input must consist only of digits and be at least the specified length.
 
-The order in which validation rules are applied is not defined.
-If multiple validation rules fail, all failures will be reported at once, but their order is not defined.
-
-### Can I hide sensitive values in error messages?
-
-Yes, enable the `mask-value` to obscure the input as `***`.
-
-Standard error message:
-
-```shell
-Validation error: The specified value "example" is invalid. Issues: must contain English letters only.
-```
-
-Customized error message:
-
-```shell
-Validation error: The specified value "***" is invalid. Issues: must contain English letters only.
-```
+Validation rules are applied in no particular order.
+If multiple validation rules fail, all failures will be reported at once, but the order of error messages is not defined.
 
 ### Can I customize error messages to make debugging easier?
 
@@ -224,14 +207,30 @@ Validation error: The specified account-id "example" is invalid. Issues: must co
 
 This replaces "value" in error messages, making it easier to identify the source of errors.
 
-### Can I fully customize the error message?
+### Can I hide sensitive values in error messages?
+
+Yes, enable the `mask-value` to obscure the input as `***`.
+
+Standard error message:
+
+```shell
+Validation error: The specified value "example" is invalid. Issues: must contain English letters only.
+```
+
+Customized error message:
+
+```shell
+Validation error: The specified value "***" is invalid. Issues: must contain English letters only.
+```
+
+### Can I define a custom error message?
 
 No, at this time, you cannot directly specify a custom error message.
 However, you can modify parts of the message by using the `value-name` or masking sensitive values with the `mask-value`.
 
 ### Can I continue processing despite validation errors?
 
-Yes, set `continue-on-error: true` to allow the workflow to proceed even if validation fails:
+Yes, set `continue-on-error: true` to continue the workflow execution even if validation fails:
 
 ```yaml
 - uses: tmknom/validation-action@v0
@@ -260,7 +259,7 @@ Users should be aware of this to avoid unintentionally skipping validation.
 
 - [valid](https://github.com/tmknom/valid): A CLI tool that validates input values based on specified rules.
     - This action internally uses `valid` to perform input validation.
-    - You can use `valid` independently for validation both locally and in CI environments.
+    - You can also use `valid` as a standalone CLI tool for validation, both locally and in CI environments.
 
 ## Release notes
 
