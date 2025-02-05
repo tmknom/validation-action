@@ -5,88 +5,88 @@ description: |
 inputs:
   value:
     required: true
-    description: The value to validate.
+    description: The value to validate against the specified rules.
   value-name:
     required: false
-    description: The name of the `value` input to include in error messages.
+    description: The name of the `value` to include in error messages.
   mask-value:
     required: false
-    description: Masks the `value` input in error messages to protect sensitive data.
+    description: Masks the `value` in error messages to protect sensitive data.
   not-empty:
     required: false
-    description: Validates whether the input value is not empty.
+    description: Validates that the `value` is not empty.
   digit:
     required: false
-    description: Validates whether the input value contains only digits (0-9).
+    description: Validates that the `value` contains only digits (0-9).
   alpha:
     required: false
-    description: Validates whether the input value contains only English letters (a-zA-Z).
+    description: Validates that the `value` contains only English letters (a-zA-Z).
   alphanumeric:
     required: false
-    description: Validates whether the input value contains only English letters and digits (a-zA-Z0-9).
+    description: Validates that the `value` contains only English letters and digits (a-zA-Z0-9).
   ascii:
     required: false
-    description: Validates whether the input value contains only ASCII characters.
+    description: Validates that the `value` contains only ASCII characters.
   printable-ascii:
     required: false
-    description: Validates whether the input value contains only printable ASCII characters.
+    description: Validates that the `value` contains only printable ASCII characters.
   lower-case:
     required: false
-    description: Validates whether the input value contains only lower case unicode letters.
+    description: Validates that the `value` contains only lower case Unicode letters.
   upper-case:
     required: false
-    description: Validates whether the input value contains only upper case unicode letters.
+    description: Validates that the `value` contains only upper case Unicode letters.
   int:
     required: false
-    description: Validates whether the input value is an integer.
+    description: Validates that the `value` is an integer.
   float:
     required: false
-    description: Validates whether the input value is a floating-point number.
+    description: Validates that the `value` is a floating-point number.
   url:
     required: false
-    description: Validates whether the input value is a valid URL.
+    description: Validates that the `value` is a valid URL.
   domain:
     required: false
-    description: Validates whether the input value is a valid domain.
+    description: Validates that the `value` is a valid domain.
   email:
     required: false
-    description: Validates whether the input value is a valid email address.
+    description: Validates that the `value` is a valid email address.
   semver:
     required: false
-    description: Validates whether the input value is a valid semantic version.
+    description: Validates that the `value` is a valid semantic version.
   uuid:
     required: false
-    description: Validates whether the input value is a valid UUID.
+    description: Validates that the `value` is a valid UUID.
   base64:
     required: false
-    description: Validates whether the input value is valid Base64.
+    description: Validates that the `value` is a valid Base64 string.
   json:
     required: false
-    description: Validates whether the input value is valid JSON.
+    description: Validates that the `value` is a valid JSON string.
   exact-length:
     required: false
-    description: Validates whether the input value's length is exactly equal to the specified number.
+    description: Validates that the length of `value` is exactly the specified number.
   min-length:
     required: false
-    description: Validates whether the input value's length is greater than or equal to the specified minimum.
+    description: Validates that the length of `value` is greater than or equal to the specified minimum.
   max-length:
     required: false
-    description: Validates whether the input value's length is less than or equal to the specified maximum.
+    description: Validates that the length of `value` is less than or equal to the specified maximum.
   min:
     required: false
-    description: Validates whether the input value is greater than or equal to the specified minimum.
+    description: Validates that the `value` is greater than or equal to the specified minimum.
   max:
     required: false
-    description: Validates whether the input value is less than or equal to the specified maximum.
+    description: Validates that the `value` is less than or equal to the specified maximum.
   enum:
     required: false
-    description: Validates whether the input value matches any of the specified enumerations.
+    description: Validates that the `value` matches one of the specified enumerations (comma-separated list).
   timestamp:
     required: false
-    description: Validates whether the input value matches a timestamp format [rfc3339, datetime, date, time].
+    description: Validates that the `value` matches the timestamp format specified in the `timestamp` input (rfc3339, datetime, date, or time).
   pattern:
     required: false
-    description: Validates whether the input value matches the specified regular expression.
+    description: Validates that the `value` matches the specified regular expression.
 
 outputs:
   error-message:
